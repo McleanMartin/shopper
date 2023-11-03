@@ -36,7 +36,7 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderDetailView(PermissionRequiredMixin, DetailView):
     permission_required = "products.view_order"
-    template_name = "admin/products/order/detail.html"
+    template_name = "map/map.html"
     model = Order
 
     def get_context_data(self, **kwargs):
@@ -64,7 +64,7 @@ class OrderAdmin(admin.ModelAdmin):
         ]
 
     def detail(self, obj: Order) -> str:
-        url = reverse("admin:products_order_detail", args=[obj.pk])
+        url = reverse("map:map", args=[obj.pk])
         return format_html(f'<a href="{url}">📝 <strong>View Details</strong></a>')
 
 
