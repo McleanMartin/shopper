@@ -1,0 +1,103 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n admin_urls %}
+{% load static %}
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% static "Map.js" %} "></script>
+{% endblock %}
+
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+        &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+        &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+        &rsaquo; {{ object }}
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <h1>Order by {{ object.user }} {{ object.created.date }}</h1>
+
+    <dl>
+        <dt>Name:</dt>
+        <dd>{{ object.user.get_full_name }}</dd>
+        <dt>Email:</dt>
+        <dd>{{ object.user.email }}</dd>
+    </dl>
+
+    <table style="width: 100%; margin-bottom: 10px;">
+        <thead>
+        <tr>
+            <td></td>
+            <td>Product</td>
+            <td>Price</td>
+            <td>Quantity</td>
+            <td>Total</td>
+        </tr>
+        </thead>
+        <tbody>
+            {% for item in object.orderitem_set.all %}
+            <tr>
+                <td><img src="{{ item.product.image.url }}" height="50"></td>
+                <td>{{ item.product.title }}</td>
+                <td>${{ item.product.price }}</td>
+                <td>x{{ item.quantity }}</td>
+                <td>${{ item.total_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p style="font-size: 18px;text-align: end;padding-right: 60px;">
+        Total: ${{ object.total_amount }}
+    </p>
+    <div class="jumbotron">
+        <div class="container-fluid">
+            <h1>Find The Distance Between Two Places.</h1>
+            <p>This App Will Help You Calculate Your Travelling Distances.</p>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="from" class="col-xs-2 control-label"><i class="far fa-dot-circle"></i></label>
+                    <div class="col-xs-4">
+                        <input type="text" id="from" placeholder="Origin" class="form-control">
+                    </div>
+               </div>
+               <div class="form-group">
+                
+                    <label for="to" class="col-xs-2 control-label"><i class="fas fa-map-marker-alt"></i></label>
+                    <div class="col-xs-4">
+                        <input type="text" id="to" placeholder="Destination" class="form-control">
+                    </div>
+                  
+                 </div>
+                 
+            </form>
+
+            <div class="col-xs-offset-2 col-xs-10">
+                <button class="btn btn-info btn-lg " onclick="calcRoute();"><i class="fas fa-map-signs"></i></button>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div id="googleMap">
+
+            </div>
+            <div id="output">
+
+            </div>
+        </div>
+
+    </div>
+
+    
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDl91ZLUSOuh36T_Z3EXcrgnZVc8bBd-1Y&libraries=places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static "Map.js" %} "></script>
+
+
+{% endblock %}
