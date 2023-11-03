@@ -64,7 +64,7 @@ class OrderAdmin(admin.ModelAdmin):
         ]
 
     def detail(self, obj: Order) -> str:
-        url = reverse("map:map", args=[obj.pk])
+        url = reverse("admin:products_order_detail", args=[obj.pk])
         return format_html(f'<a href="{url}">📝 <strong>View Details</strong></a>')
 
 
