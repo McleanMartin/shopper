@@ -57,3 +57,9 @@ def user_orders(request):
     return render(request, 'order/user_orders.html', context)
 
 
+
+def calculate_weekly_sales():
+    pass
+
+
+
