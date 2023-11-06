@@ -39,12 +39,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_admin_logs',
+    'django_apscheduler',
     'products',
     'cart',
     'orders',
     'accounts',
     'dashboard',
 ]
+
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+
+SCHEDULER_AUTOSTART = True
 
 
 DJANGO_ADMIN_LOGS_DELETABLE = False
