@@ -43,11 +43,11 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a class="" href="{% url "cart:show_cart" %}">Cart</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.username}}<span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.username|capfirst}}<span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="{">Orders</a></li>
+                <li><a href="">Orders</a></li>
                 {% if user.is_superuser %}
-                <li><a href="{% url "admin:index" %}">Store Admin</a></li>
+                <li><a href="{% url "dashboard:products" %}">Store Admin</a></li>
                 {% endif %}
                 <li><a href="{% url "accounts:user_logout" %}">Logout</a></li>
               </ul>

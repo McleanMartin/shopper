@@ -1,0 +1,15 @@
+{% extends "dashboard/dashboard.html" %}
+
+{% block content %}
+<div class="col-sm-12">
+    <input id="from" type="text" value="dangamvura" hidden/>
+    <input id="to" type="text" value="fern valley" hidden/>
+    <div id="googleMap" onload="calcRoute();">
+    </div>
+    <div id="output">
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -12,12 +12,6 @@ class StockItemInline(admin.TabularInline):
     model = StockItem
 
 
-@admin.register(RequestStock)
-class RequestStockAdmin(admin.ModelAdmin):
-    list_display = ['user']
-    search_fields = ['user']
-    inlines = [StockItemInline]
-
 
 @admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):

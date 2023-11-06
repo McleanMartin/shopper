@@ -50,6 +50,10 @@ class Product(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    firstname = models.CharField(max_length=50)
+    lastname = models.CharField(max_length=50)
+    destination = models.CharField(max_length=200)
+    paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -89,15 +93,11 @@ class Stock(models.Model):
     def __str__(self):
         return self.title
 
-class RequestStock(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.user.username
 
 class StockItem(models.Model):
     item = models.ForeignKey(Stock, on_delete=models.CASCADE)
-    req = models.ForeignKey(RequestStock, on_delete=models.CASCADE)
+    req = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     class Meta:

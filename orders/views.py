@@ -6,22 +6,39 @@ from django.utils import timezone
 
 from products.models import Order, OrderItem
 from cart.utils.cart import Cart
-import googlemaps
+from .map import get_delivery_price
 
-import json
-import requests
-import sys
+import paynow
+import time
 
 
 @login_required
 def create_order(request):
     cart = Cart(request)
-    order = Order.objects.create(user=request.user)
-    for item in cart:
-        OrderItem.objects.create(
-            order=order, product=item['product'],
-            price=item['price'], quantity=item['quantity']
-    )
+    if request.method == 'POST':
+        order = Order.objects.create(
+            user=request.user,
+            firstname = request.POST.get('firstname'),
+            lastname = request.POST.get('lastname'),
+            destination = request.POST.get('address'),
+            )
+        for item in cart:
+            OrderItem.objects.create(
+                    order=order, product=item['product'],
+                    price=item['price'], quantity=item['quantity']
+
+            )
+
+        dist =  get_delivery_price(request.POST.get('address')).get()     
+        price =  dist + cart.get_total_price
+        payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
+        payment.add('ecocash',price)
+        response = paynow.send_mobile(payment,str(request.POST.get('number')),'ecocash')
+        if response.success:
+            poll_url = response.poll_url
+            print(poll_url)
+            status  = paynow.check_transaction_status(poll_url)
+            time.sleep(15)
     return redirect('pay_order', order_id=order.id)
 
 
@@ -31,24 +48,6 @@ def checkout(request, order_id):
     context = {'title':'Checkout' ,'order':order}
     return render(request, 'checkout.html', context)
 
-
-@login_required
-def fake_payment(request, order_id):
-    cart = Cart(request)
-    cart.clear()
-    order = get_object_or_404(Order, id=order_id)
-    order.status = True
-    order.save()
-
-    # Requires API key
-    gmaps = googlemaps.Client(key='AIzaSyDl91ZLUSOuh36T_Z3EXcrgnZVc8bBd-1Y')
-    
-    # Requires location name
-    dist = gmaps.distance_matrix('fern valley,mutare','dangamvura,mutare')['rows'][0]['elements'][0]
-    
-    # Get distance
-    distance = dist['distance']['text']
-    return redirect('user_orders')
 
 
 @login_required

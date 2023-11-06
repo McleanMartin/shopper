@@ -1,0 +1,14 @@
+{% extends "dashboard/dashboard.html" %}
+{% block content %}
+
+<div class="col-md-6">
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <div class="form-group">
+        <button class="btn btn-success col-md-12" style="margin-top:10px;" type="submit">Add Item</button>
+    </div>
+</form>
+</div>
+{% endblock %}
+
