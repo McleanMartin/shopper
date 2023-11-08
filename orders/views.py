@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.http import HttpResponseRedirect,HttpResponse
 from products.models import Order, OrderItem
 from cart.utils.cart import Cart
-from .map import get_delivery_price
+from .map import get_cost
 from django.contrib import messages
 
 import paynow
@@ -20,8 +20,9 @@ def create_order(request):
         number = request.POST.get('number')
         try:
             #get total cost
-            dist =  get_delivery_price(str(request.POST.get('address'))).get()     
-            price =  cart.get_total_price + dist
+            point = request.POST.get('address')
+            d_price =  get_cost(point)    
+            price =  cart.get_total_price + d_price
 
             #create payment
             payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
