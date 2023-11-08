@@ -1,26 +1,6 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
-<script type="text/javascript">
-  document.getElementById("DisplayOnClick").onclick = function(){
-    if(document.getElementById("DisplayOnClick").checked){
-        document.getElementById("myFieldset").style.display = "block";
-       
-    } else {       
-        document.getElementById("myFieldset").disabled = !this.checked;          
-    }
-  };
-$(function () {
-
-  $("#DisplayOnClick").click(function () {
-      if ($(this).is("checked")){
-          $("#myFieldset").show();
-      }else {
-          $("#myFieldset").hide();
-      }
-  });
-});
-</script>
 {% if cart_count != 0 %}
 <div class="conatiner">
 <div class="row g-5">
@@ -112,7 +92,7 @@ $(function () {
 
       <hr class="my-4">
 
-      <a href="" class="col-sm-12 btn btn-success">checkout</a>
+      <button type="submit" class="col-sm-12 btn btn-success">checkout</button>
     </form>
   </div>
 </div>

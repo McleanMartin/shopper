@@ -35,7 +35,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 if user.is_superuser:
-                    return redirect('dashboard:products')
+                    return redirect('dashboard:dashboard')
                 else:
                     return redirect('products:home_page')
             else:

@@ -19,6 +19,19 @@ def is_manager(user):
 
 
 
+
+@login_required
+def dashboard(request):
+    products = Product.objects.all().count()
+    orders = Order.objects.all().count()
+    customers = User.objects.all().count()
+    context = {
+        'products':products,
+        'orders':orders,
+        'customers':customers,
+    }
+    return render(request,'dashboard/stat.html',context)
+
 @login_required
 def products(request):
     products = Product.objects.all()

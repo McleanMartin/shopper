@@ -65,13 +65,13 @@ body {
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
-  color: #fff;
+  color: teal;
   border-radius: 10px;
 }
 
 
 /*
- * Main content
+ * Main content 
  */
 
 .main {

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.views.decorators.http import require_POST
 from django.utils import timezone
-
+from django.http import HttpResponseRedirect,HttpResponse
 from products.models import Order, OrderItem
 from cart.utils.cart import Cart
 from .map import get_delivery_price
@@ -16,30 +16,37 @@ import time
 def create_order(request):
     cart = Cart(request)
     if request.method == 'POST':
-        order = Order.objects.create(
-            user=request.user,
-            firstname = request.POST.get('firstname'),
-            lastname = request.POST.get('lastname'),
-            destination = request.POST.get('address'),
-            )
-        for item in cart:
-            OrderItem.objects.create(
-                    order=order, product=item['product'],
-                    price=item['price'], quantity=item['quantity']
-
-            )
-
-        dist =  get_delivery_price(request.POST.get('address')).get()     
+        dist =  get_delivery_price(str(request.POST.get('address'))).get()     
         price =  dist + cart.get_total_price
-        payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
-        payment.add('ecocash',price)
-        response = paynow.send_mobile(payment,str(request.POST.get('number')),'ecocash')
-        if response.success:
-            poll_url = response.poll_url
-            print(poll_url)
-            status  = paynow.check_transaction_status(poll_url)
-            time.sleep(15)
-    return redirect('pay_order', order_id=order.id)
+        try:
+            payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
+            payment.add('ecocash',price)
+            response = paynow.send_mobile(payment,str(request.POST.get('number')),'ecocash')
+            if response.success:
+                poll_url = response.poll_url
+                print(poll_url)
+                status  = paynow.check_transaction_status(poll_url)
+                time.sleep(15)
+                if status.paid:
+                    order = Order.objects.create(
+                    user=request.user,
+                    firstname = request.POST.get('firstname'),
+                    lastname = request.POST.get('lastname'),
+                    destination = request.POST.get('address'),
+                    status = True,
+                    )
+                    for item in cart:
+                        OrderItem.objects.create(
+                                order=order, product=item['product'],
+                                price=item['price'], quantity=item['quantity']
+
+                        )
+                print("Payment ",{'status':status})
+            else:
+                pass
+        except:
+            pass
+    return HttpResponseRedirect('list')
 
 
 @login_required
