@@ -25,10 +25,12 @@ def dashboard(request):
     products = Product.objects.all().count()
     orders = Order.objects.all().count()
     customers = User.objects.all().count()
+    client_orders = Order.objects.all().order_by('-created')
     context = {
         'products':products,
         'orders':orders,
         'customers':customers,
+        'client_orders':client_orders
     }
     return render(request,'dashboard/stat.html',context)
 

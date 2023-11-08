@@ -53,10 +53,7 @@ def create_order(request):
                     paid=True,
                     
                     )
-                    # user = User.objects.update_or_create(
-                    #     first_name = request.POST.get('firstname'),
-                    #     last_name = request.POST.get('lastname'),
-                    # )
+        
                     for item in cart:
                         OrderItem.objects.create(
                                 order=order, product=item['product'],
@@ -75,11 +72,6 @@ def create_order(request):
                     paid=True,
                     
                     )
-
-                    # user = User.objects.update_or_create(
-                    #     first_name = request.POST.get('firstname'),
-                    #     last_name = request.POST.get('lastname'),
-                    # )
                     
                     for item in cart:
                         OrderItem.objects.create(

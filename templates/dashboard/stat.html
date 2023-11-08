@@ -134,30 +134,35 @@
 	               <th>Customer</th>
 	               <th>Total Price</th>
 	               <th>Address</th>
+                 <th>Order Date</th>
 	           </tr>
 	        </thead>
 	        <tbody>
+            {% for order in client_orders %}
 	            
 	            <tr>
 	                <td>
-	                    <a href="#"> <i class="glyphicon glyphicon-eye-open"></i></a>
+	                    <a href="{% url 'dashboard:order_detail' order.id %}"> <i class="glyphicon glyphicon-eye-open"></i></a>
 	                </td>
 	                <td>
-	                    rosemary chimuti
+	                    {{order.firstname}} - {{order.lastname}}
 	                </td>
 	                <td>
-	                    $ 350 
+	                    ${{order.total_amount}} ZWL
 	                </td>
 	                <td>
-	                    Chikanga 2
+	                    {{order.destination}}
 	                </td>
+                  <td>
+                    {{order.created}}
+                </td>
 	                
 	                
 	            </tr>
 	            
 	    
 
-	            
+	          {% endfor %}
 	        </tbody>
 	        
 	    </table>
