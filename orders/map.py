@@ -2,9 +2,6 @@
 import googlemaps
 import re
 
-
-
-
 def get_cost(point):
     # Requires API key
     try:
@@ -14,7 +11,7 @@ def get_cost(point):
         my_dist = gmaps.distance_matrix('mutare CBD',point)['rows'][0]['elements'][0]
             
         # Distance price
-        dist = re.findall("\d+\.\d+", my_dist['distance']['text'])
+        dist = re.findall(r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", my_dist['distance']['text'])
         km = float(dist[0])
         return km * 0.50
     except:

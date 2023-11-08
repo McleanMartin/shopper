@@ -50,9 +50,9 @@ class Product(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
-    destination = models.CharField(max_length=200)
+    firstname = models.CharField(max_length=50,null=True,blank=True)
+    lastname = models.CharField(max_length=50,null=True,blank=True)
+    destination = models.CharField(max_length=200,null=True,blank=True)
     paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -68,6 +68,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    price = models.FloatField(default=0.0)
 
     @property
     def total_amount(self):

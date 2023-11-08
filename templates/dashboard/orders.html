@@ -15,7 +15,7 @@
     <tbody>
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ order.user.full_name }}</td>
+        <td>{{ order.user.username }}</td>
         <td>{{ order.id }}</td>
         <td>${{ order.get_total_price }}</td>
         {% if order.status %}
