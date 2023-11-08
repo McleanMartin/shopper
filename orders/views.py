@@ -18,10 +18,11 @@ def create_order(request):
     if request.method == 'POST':
         dist =  get_delivery_price(str(request.POST.get('address'))).get()     
         price =  dist + cart.get_total_price
+        number = request.POST.get('number')
         try:
             payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
             payment.add('ecocash',price)
-            response = paynow.send_mobile(payment,str(request.POST.get('number')),'ecocash')
+            response = paynow.send_mobile(payment,str(number),'ecocash')
             if response.success:
                 poll_url = response.poll_url
                 print(poll_url)
