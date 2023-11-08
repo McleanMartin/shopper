@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect,HttpResponse
 from products.models import Order, OrderItem
 from cart.utils.cart import Cart
 from .map import get_delivery_price
+from django.contrib import messages
 
 import paynow
 import time
@@ -16,13 +17,18 @@ import time
 def create_order(request):
     cart = Cart(request)
     if request.method == 'POST':
-        dist =  get_delivery_price(str(request.POST.get('address'))).get()     
-        price =  dist + cart.get_total_price
         number = request.POST.get('number')
         try:
+            #get total cost
+            dist =  get_delivery_price(str(request.POST.get('address'))).get()     
+            price =  cart.get_total_price + dist
+
+            #create payment
             payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
             payment.add('ecocash',price)
             response = paynow.send_mobile(payment,str(number),'ecocash')
+
+            #get response
             if response.success:
                 poll_url = response.poll_url
                 print(poll_url)
@@ -42,19 +48,35 @@ def create_order(request):
                                 price=item['price'], quantity=item['quantity']
 
                         )
-                print("Payment ",{'status':status})
+                    print("Payment ",{'status':status})
+                    messages.success(request,'order placed successful')
+                    return redirect('products:home_page')
+                else:
+                    order = Order.objects.create(
+                    user=request.user,
+                    firstname = request.POST.get('firstname'),
+                    lastname = request.POST.get('lastname'),
+                    destination = request.POST.get('address'),
+                    status = True,
+                    )
+                    for item in cart:
+                        OrderItem.objects.create(
+                                order=order, product=item['product'],
+                                price=item['price'], quantity=item['quantity']
+
+                        )
+                    print("Payment ",{'status':status})
+                    messages.success(request,'order placed successful')
+                    return redirect('products:home_page')
             else:
-                pass
+                messages.error(request,'')
+                return redirect('cart:show_cart')
         except:
-            pass
-    return HttpResponseRedirect('list')
-
-
-@login_required
-def checkout(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    context = {'title':'Checkout' ,'order':order}
-    return render(request, 'checkout.html', context)
+            messages.error(request,'uuuuuuu')
+            return redirect('cart:show_cart')
+    else:
+        messages.error(request,'extrernal error')
+        return redirect('cart:show_cart')
 
 
 
