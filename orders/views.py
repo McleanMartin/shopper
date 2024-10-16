@@ -14,10 +14,7 @@ import time
 from paynow import Paynow
 
 paynow = Paynow(
-    '14813',
-    '3e688baf-5630-4145-a99c-d5deb32e5b2e',
-    'https://google.com',
-    'http://127.0.0.1:8000'
+    
 )
 
 @login_required
@@ -32,7 +29,7 @@ def create_order(request):
             price =  cart.get_total_price() 
 
             #create payment
-            payment = paynow.create_payment('ecocash','smasonfukuzeya123@gmail.com')
+            payment = paynow.create_payment('ecocash','YOUR PAYNOW EMAIL HERE')
             payment.add('ecocash',price)
             response = paynow.send_mobile(payment,str(number),'ecocash')
 
